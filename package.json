@@ -1,0 +1,21 @@
+{
+  "name": "gulp-pug-sass-es2015",
+  "description": "Skeleton/scaffolding/starter kit written in Gulp supporting Pug (Jade), Sass and ES2015.",
+  "version": "0.0.1",
+  "author": "monnef",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-livescript": "^3.0.1",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-pug": "^3.3.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-server-livereload": "^1.9.2",
+    "gulp-task-listing": "^1.0.1",
+    "gulp-util": "^3.0.8",
+    "livescript": "^1.5.0"
+  }
+}
