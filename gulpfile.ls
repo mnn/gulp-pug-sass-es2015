@@ -3,6 +3,7 @@ require! {
   del
 }
 $ = (require \gulp-load-plugins)!
+sync = (require \browser-sync).create!
 
 do ->
   c = $.util.colors
@@ -22,22 +23,29 @@ assetsGlob = srcDir + '/assets/**/*.*'
 
 gulp.task \sass, ->
   gulp.src sassGlob
-    .pipe $.sass()
+    .pipe $.sass().on('error', (err) ->
+      $.util.log(err)
+      @emit('end')
+    )
     .pipe gulp.dest destDir
+    .pipe sync.stream!
 
 gulp.task \babel, ->
   gulp.src babelGlob
     .pipe $.babel({presets:[\es2015]})
     .pipe gulp.dest destDir
+    .pipe sync.stream!
 
 gulp.task \pug, ->
   gulp.src pugGlob
     .pipe $.pug({})
     .pipe gulp.dest destDir
+    .pipe sync.stream!
 
 gulp.task \assets, ->
   gulp.src assetsGlob
     .pipe gulp.dest destDir
+    .pipe sync.stream!
 
 gulp.task \build, [\sass \babel \pug \assets]
 
@@ -47,13 +55,12 @@ gulp.task \watch, [\build], !->
   gulp.watch pugGlob, [\pug]
   gulp.watch assetsGlob, [\assets]
 
-gulp.task \serve, [\watch], ->
-  gulp.src destDir
-    .pipe $.serverLivereload({
-      +livereload
-      +open
-      port: 3000
-    })
+gulp.task \serve, [\watch], !->
+  sync.init({
+    server: {
+      baseDir: './dist'
+    }
+  })
 
 gulp.task \clean, ->
   del(destDir)
