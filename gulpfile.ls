@@ -1,6 +1,7 @@
 require! {
   gulp
-  del
+  del,
+  'node-notifier': notifier
 }
 $ = (require \gulp-load-plugins)!
 sync = (require \browser-sync).create!
@@ -8,6 +9,12 @@ sync = (require \browser-sync).create!
 do ->
   c = $.util.colors
   $.util.log 'Basic', c.yellow('Pug + Sass + ES6'), 'buildfile by', c.magenta(\monnef)
+
+printError = (msg) ->
+  notifier.notify({
+    title: 'Error'
+    message: msg
+  })
 
 gulp.task \default, [\help]
 
@@ -25,6 +32,7 @@ gulp.task \sass, ->
   gulp.src sassGlob
     .pipe $.sass().on('error', (err) ->
       $.util.log(err)
+      printError('Sass compilation failed.')
       @emit('end')
     )
     .pipe gulp.dest destDir
@@ -38,7 +46,11 @@ gulp.task \babel, ->
 
 gulp.task \pug, ->
   gulp.src pugGlob
-    .pipe $.pug({})
+    .pipe $.pug({}).on('error', (err) -> 
+      $.util.log(err)
+      printError('Pug compilation failed.')
+      @emit('end')
+    )
     .pipe gulp.dest destDir
     .pipe sync.stream!
 
@@ -56,11 +68,10 @@ gulp.task \watch, [\build], !->
   gulp.watch assetsGlob, [\assets]
 
 gulp.task \serve, [\watch], !->
-  sync.init({
-    server: {
+  sync.init(
+    server: 
       baseDir: './dist'
-    }
-  })
+  )
 
 gulp.task \clean, ->
   del(destDir)
