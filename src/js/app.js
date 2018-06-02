@@ -1,1 +1,1 @@
-(() => document.write('Hello from ES5!'))();
+(() => document.write('Hello from ES2015!'))();

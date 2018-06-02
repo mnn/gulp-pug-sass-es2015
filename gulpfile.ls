@@ -9,7 +9,7 @@ sync = (require \browser-sync).create!
 
 do ->
   c = $.util.colors
-  $.util.log 'Basic', c.yellow('Pug + Sass + ES6 + LiveScript'), 'buildfile by', c.magenta(\monnef)
+  $.util.log 'Basic', c.yellow('Pug + Sass + ES2015 + LiveScript'), 'buildfile by', c.magenta(\monnef)
 
 notifyError = (msg) ->
   notifier.notify({
