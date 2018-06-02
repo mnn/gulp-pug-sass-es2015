@@ -42,13 +42,17 @@ gulp.task \sass, ->
 
 gulp.task \babel, ->
   gulp.src babelGlob
-    .pipe $.babel({presets:[\es2015]})
+    .pipe $.babel({presets:[\es2015]}).on('error', (err) ->
+      $.util.log(err)
+      notifyError('JS compilation failed.')
+      @emit('end')
+    )
     .pipe gulp.dest destDir
     .pipe sync.stream!
 
 gulp.task \pug, ->
   gulp.src pugGlob
-    .pipe $.pug({}).on('error', (err) -> 
+    .pipe $.pug({}).on('error', (err) ->
       $.util.log(err)
       notifyError('Pug compilation failed.')
       @emit('end')
@@ -71,7 +75,7 @@ gulp.task \watch, [\build], !->
 
 gulp.task \serve, [\watch], !->
   sync.init(
-    server: 
+    server:
       baseDir: './dist'
   )
 
